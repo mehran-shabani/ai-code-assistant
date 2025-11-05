@@ -62,3 +62,37 @@ export const XCircleIcon = () => (
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
 );
+
+export const SunIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    className="h-5 w-5"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M12 3v1.5M12 19.5V21m9-9h-1.5M4.5 12H3m16.243-6.243l-1.06 1.06M6.818 17.182l-1.06 1.06m0-12.02l1.06 1.06m11.365 11.366l1.06 1.06M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"
+    />
+  </svg>
+);
+
+export const MoonIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    className="h-5 w-5"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M21 12.79A9 9 0 1111.21 3a7.5 7.5 0 109.79 9.79z"
+    />
+  </svg>
+);
