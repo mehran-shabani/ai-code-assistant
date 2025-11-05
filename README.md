@@ -18,3 +18,20 @@ View your app in AI Studio: https://ai.studio/apps/drive/1RZPmotgxUZVOaXZQZ6xP43
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+
+## Use from the terminal or PowerShell
+
+Once dependencies are installed and your `API_KEY` (or `GEMINI_API_KEY`) environment variable is set, you can chat without the web UI:
+
+```bash
+# Single question
+npm run cli -- --prompt "Explain the difference between let and const in TypeScript."
+
+# Interactive session (type `exit` to quit)
+npm run cli
+
+# Attach context files and enable thinking mode
+npm run cli -- --thinking --file ./src/utils/example.ts
+```
+
+You can also pass the API key directly using `--api-key <key>` if you prefer not to export it beforehand.
