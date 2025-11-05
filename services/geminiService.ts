@@ -63,9 +63,7 @@ export const generateResponse = async ({ prompt, isThinkingMode, isSearchGrounde
 
   } catch (error) {
     console.error("Error generating response from Gemini API:", error);
-    if (error instanceof Error) {
-      return { text: `An error occurred: ${error.message}` };
-    }
-    return { text: "An unknown error occurred while contacting the Gemini API." };
+    // Re-throw the error to be handled by the calling component, allowing for more specific UI feedback.
+    throw error;
   }
 };

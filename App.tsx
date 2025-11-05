@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import type { Message } from './types';
 import { generateResponse } from './services/geminiService';
@@ -40,7 +41,9 @@ const App: React.FC = () => {
     if (!e.target.files) return;
 
     const files = Array.from(e.target.files);
-    const filePromises = files.map(file => {
+    // FIX: Explicitly type `file` as `File` to resolve ambiguity in TypeScript's type inference.
+    // This corrects errors where `file.name` was inaccessible and `file` was not assignable to Blob.
+    const filePromises = files.map((file: File) => {
         return new Promise<AttachedFile>((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = (event) => {
@@ -77,9 +80,10 @@ const App: React.FC = () => {
     setFileCharCount(0);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
+  // FIX: Extracted submission logic into a dedicated function to be reused and fix type errors.
+  const sendMessage = async () => {
+    // This check now correctly matches the button's disabled state.
+    if (isLoading || (!input.trim() && attachedFiles.length === 0)) return;
 
     const userMessage: Message = { id: Date.now().toString(), role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
@@ -110,18 +114,34 @@ const App: React.FC = () => {
       setMessages(prev => [...prev, modelMessage]);
 
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred.';
-      setError(errorMessage);
+      let userFriendlyMessage = 'An unexpected error occurred. Please try again.';
+      if (err instanceof Error) {
+        if (err.message.includes('API key not valid')) {
+          userFriendlyMessage = "There seems to be an issue with the API key. Please ensure it is configured correctly.";
+        } else if (err.message.match(/50\d/)) {
+          userFriendlyMessage = "The service is currently experiencing issues. Please try again in a few moments.";
+        } else if (err.message.includes('429')) {
+            userFriendlyMessage = "You've sent too many requests in a short period. Please wait a bit before sending another."
+        }
+      }
+      
+      setError(userFriendlyMessage);
+      
       const errorResponse: Message = {
         id: (Date.now() + 1).toString(),
         role: 'model',
-        content: `Error: ${errorMessage}`
+        content: `Sorry, I ran into a problem: ${userFriendlyMessage}`
       };
       setMessages(prev => [...prev, errorResponse]);
     } finally {
       setIsLoading(false);
       handleClearFiles(); // Clear files after submission
     }
+  };
+  
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    sendMessage();
   };
   
   const handleThinkingModeToggle = () => {
@@ -231,7 +251,8 @@ const App: React.FC = () => {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
-                    handleSubmit(e);
+                    // FIX: Call the refactored `sendMessage` function to avoid type mismatch.
+                    sendMessage();
                   }
                 }}
                 placeholder="Ask a coding question..."
