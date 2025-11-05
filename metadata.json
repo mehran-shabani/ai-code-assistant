@@ -1,0 +1,5 @@
+{
+  "name": "AI Code Assistant",
+  "description": "An intelligent agent to assist with writing, analyzing, and editing code. Features a powerful thinking mode for complex queries and Google Search grounding for up-to-date information.",
+  "requestFramePermissions": []
+}
